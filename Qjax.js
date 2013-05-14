@@ -23,6 +23,13 @@ var Qjax=(function() {
         json:   'application/json, text/javascript, */*; q=0.1',
         script: 'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.1'
     },
+    statusClasses={
+        1: 'informational',
+        2: 'successful',
+        3: 'redirection',
+        4: 'clientError',
+        5: 'serverError'
+    },
 
     // Returns an XMLHttpRequest object
     getXHR=function() {
@@ -52,23 +59,38 @@ var Qjax=(function() {
         if(request.async) {
             xhr.onreadystatechange=function() {
                 if(this.readyState==4) {
-                    if(this.status>0) {
-                        switch(request.dataType.toLowerCase()) {
-                            case 'json':
-                                this.responseData=JSON.parse(this.response);
-                                break;
-                            case 'xml':
-                            case 'html':
-                                this.responseData=this.responseXML;
-                                break;
-                            default:
-                                this.responseData=this.responseText;
-                                break;
-                        }
+                    var statusClass=statusClasses[this.status.toString().charAt(0)];
+                    switch(statusClass) {
+                        case 'successful':
+                            switch(request.dataType) {
+                                case 'json':
+                                    this.responseData=JSON.parse(this.response);
+                                    break;
+                                case 'xml':
+                                case 'html':
+                                    this.responseData=this.responseXML;
+                                    break;
+                                default:
+                                    this.responseData=this.responseText;
+                                    break;
+                            }
+                            if(request.callback.success instanceof Function) {
+                                request.callback.success.apply(this);
+                            }
+                            break;
+                        case 'clientError':
+                        case 'serverError':
+                            if(request.callback.error instanceof Function) {
+                                request.callback.error.apply(this);
+                            }
+                            break;
+                    }
+                    if(request.callback[this.status] instanceof Function) {
+                        request.callback[this.status].apply(this);
                     }
                 }
             };
-            for(var e in request.callback) {
+            for(var e in {loadstart:1,progress:1,load:1,abort:1,error:1,loadend:1}) {
                 if(request.callback[e] instanceof Function) {
                     xhr.addEventListener(e,request.callback[e],false);
                 }
@@ -91,10 +113,16 @@ var Qjax=(function() {
 
         if(request.async) {
             if(request.timeout<Infinity) {
-                timeoutID=setTimeout(function() { xhr.abort(); },request.timeout);
+                timeoutID=setTimeout(function() {
+                    xhr.abort();
+                    if(request.callback.timeout instanceof Function) {
+                        request.callback.timeout.apply(xhr);
+                    }
+                },request.timeout);
             }
         }else {
             thread.onTransportComplete.apply(thread,[request]);
+            triggerEdge();
         }
     },
 
@@ -170,7 +198,7 @@ var Qjax=(function() {
         this.method         =(/^(GET|POST|PUT|DELETE)$/i.test(opts.method)) ? opts.method.toUpperCase() : 'GET';
 
         if(opts.callback instanceof Function) {
-            this.callback={loadend:opts.callback};
+            this.callback={successs:opts.callback};
         }else if(opts.callback instanceof Object) {
             this.callback=opts.callback;
         }else {
@@ -188,9 +216,9 @@ var Qjax=(function() {
                 this.headers['Content-Type']='application/x-www-form-urlencoded; charset=UTF-8';
             }
         }
-		if(!this.headers.hasOwnProperty('X-Requested-With')) {
-			this.headers['X-Requested-With']='XMLHttpRequest';
-		}
+        if(!this.headers.hasOwnProperty('X-Requested-With')) {
+            this.headers['X-Requested-With']='XMLHttpRequest';
+        }
         if(!this.url) throw new Error('Qjax: Invalid URL');
     },
 
