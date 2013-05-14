@@ -13,8 +13,8 @@ var Qjax=(function() {
 		maxAsync:		Infinity,
 	},
 	backlog			=null,
-	concurrent		=0,
 	lastServed		=null,
+	concurrent		=0,
 	accepts			={
 		text:	'text/plain, */*; q=0.1',
 		html:	'text/html, */*; q=0.1',
