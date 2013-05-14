@@ -1,6 +1,7 @@
 /*
  * Qjax.js
  * A JavaScript tool that manages multiple queues of AJAX requests
+ *
  */
 var Qjax=(function() {
   var threads			=[],
