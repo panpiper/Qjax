@@ -188,6 +188,9 @@ var Qjax=(function() {
                 this.headers['Content-Type']='application/x-www-form-urlencoded; charset=UTF-8';
             }
         }
+		if(!this.headers.hasOwnProperty('X-Requested-With')) {
+			this.headers['X-Requested-With']='XMLHttpRequest';
+		}
         if(!this.url) throw new Error('Qjax: Invalid URL');
     },
 
