@@ -17,11 +17,11 @@ var Qjax=(function() {
     lastServed          =null,
     concurrent          =0,
     accepts={
-        text:    'text/plain, */*; q=0.1',
-        html:    'text/html, */*; q=0.1',
+        text:   'text/plain, */*; q=0.1',
+        html:   'text/html, */*; q=0.1',
         xml:    'application/xml, text/xml, */*; q=0.1',
-        json:    'application/json, text/javascript, */*; q=0.1',
-        script:    'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.1'
+        json:   'application/json, text/javascript, */*; q=0.1',
+        script: 'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.1'
     },
 
     // Returns an XMLHttpRequest object
@@ -157,26 +157,18 @@ var Qjax=(function() {
         this.thread         =thread;
         this.url            =opts.url;
         this.async          =opts.async || true;
-        this.dataType       =opts.dataType || '';
+        this.dataType       =(opts.dataType || '').toLowerCase();
         this.data           =opts.data;
         this.priority       =opts.priority || 10;
         this.headers        =opts.headers || {};
         this.username       =opts.username || null,
         this.password       =opts.password || null,
         this.timeout        =opts.timeout || thread.settings.timeout;
-        this.delay          =opts.delay    || thread.settings.delay;
+        this.delay          =opts.delay || thread.settings.delay;
         this.maxAttempts    =opts.maxAttempts || thread.settings.maxAttempts;
         this.attempts       =0;
+        this.method         =(/^(GET|POST|PUT|DELETE)$/i.test(opts.method)) ? opts.method.toUpperCase() : 'GET';
 
-        if(typeof opts.method=='string') {
-            if(({GET:1,POST:1,PUT:1,DELETE:1})[opts.method.toUpperCase()]) {
-                this.method=opts.method.toUpperCase();
-            }else {
-                throw new Error('Qjax: Invalid request method');
-            }
-        }else {
-            this.method='GET';
-        }
         if(opts.callback instanceof Function) {
             this.callback={loadend:opts.callback};
         }else if(opts.callback instanceof Object) {
@@ -185,8 +177,8 @@ var Qjax=(function() {
             this.callback={};
         }
         if(!this.headers.hasOwnProperty('Accept')) {
-            if(({text:1,html:1,xml:1,json:1,script:1})[this.dataType.toLowerCase()]) {
-                this.headers['Accept']=accepts[this.dataType.toLowerCase()];
+            if(({text:1,html:1,xml:1,json:1,script:1})[this.dataType]) {
+                this.headers['Accept']=accepts[this.dataType];
             }
         }
         if(!this.headers.hasOwnProperty('Content-Type')) {
