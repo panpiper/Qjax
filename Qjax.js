@@ -189,7 +189,6 @@ var Qjax=(function() {
             }
         }
         if(!this.url) throw new Error('Qjax: Invalid URL');
-        if(!this.method) throw new Error('Qjax: Invalid request method');
     },
 
     // The queue data structure
