@@ -126,14 +126,14 @@ var Qjax=(function() {
         }
     },
 
-    // Returns true if the limit of concurrent asynchronous requests has been reached
-    asyncLimitReached=function() {
-        return concurrent>=settings.maxAsync;
-    },
-
     // Dispatch a request in `request.delay` milliseconds
     delayDispatch=function(request) {
         setTimeout(function() { return dispatch.apply(this,[request]); },request.delay);
+    },
+
+    // Returns true if the limit of concurrent asynchronous requests has been reached
+    asyncLimitReached=function() {
+        return concurrent>=settings.maxAsync;
     },
 
     // Serve all available threads
@@ -469,7 +469,7 @@ var Qjax=(function() {
 
         // Dispatches a stand-alone request or enqueues it in the backlog if the maximum
         // number of asynchronous requests has been met
-        dispatch: function(rOptions) {
+        send: function(rOptions) {
             backlog.enqueue(rOptions);
         },
 
