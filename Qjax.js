@@ -469,7 +469,13 @@ var Qjax=(function() {
 
         // Dispatches a stand-alone request or enqueues it in the backlog if the maximum
         // number of asynchronous requests has been met
-        send: function(rOptions) {
+        send: function(url,rOptions) {
+			if(typeof url=='string') {
+				rOptions=rOptions || {};
+				rOptions.url=url;
+			}else {
+				rOptions=url;
+			}
             backlog.enqueue(rOptions);
         },
 
