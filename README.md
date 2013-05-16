@@ -1,7 +1,7 @@
 #Qjax
 A JavaScript tool that manages multiple queues of AJAX requests
 
-#Usage
+##Usage
 ####Stand-alone requests
  ```javascript
 Qjax.send('url'); //translates to a GET request
@@ -29,7 +29,10 @@ or
 Qjax.createThread('myNewThread');
 Qjax.thread('myNewThread').enqueue({
     url: 'someurl',
-    method: 'GET',
-    dataType: 'json'
+    dataType: 'json',
+    data: {
+        foo: true,
+        bar: false
+    }
 });
 ```
