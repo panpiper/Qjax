@@ -1,6 +1,8 @@
 #Qjax
 A JavaScript tool that manages multiple queues of AJAX requests
 
+#####Dependencies: none
+
 ##Usage
 ####Stand-alone requests
  ```javascript
