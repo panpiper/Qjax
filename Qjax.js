@@ -187,6 +187,7 @@ var Qjax=(function() {
         this.async          =opts.async || true;
         this.dataType       =(opts.dataType || '').toLowerCase();
         this.data           =opts.data;
+        this.convertData    =opts.convertData || true;
         this.contentType    =opts.contentType;
         this.priority       =opts.priority || 10;
         this.headers        =opts.headers || {};
@@ -210,25 +211,53 @@ var Qjax=(function() {
                 this.headers['Accept']=accepts[this.dataType];
             }
         }
+        if(this.convertData && this.data && typeof this.data=='object') {
+            this.data=this.convertDataFn(this.data);
+
+            if(this.method=='GET') {
+                this.url+='?'+this.data;
+                this.data=null;
+            }
+        }
         if(this.contentType) {
             this.headers['Content-Type']=this.contentType;
-        }else {
-            if(this.data && !this.headers.hasOwnProperty('Content-Type')) {
-                if(this.data instanceof Object) {
-                    this.headers['Content-Type']='application/json';
-                }else {
-                    this.headers['Content-Type']='application/x-www-form-urlencoded; charset=UTF-8';
-                }
-            }
+        }else if(this.data) {
+            this.headers['Content-Type']='application/x-www-form-urlencoded; charset=UTF-8';
         }
         if(!this.headers.hasOwnProperty('X-Requested-With')) {
             this.headers['X-Requested-With']='XMLHttpRequest';
         }
         if(!this.url) throw new Error('Qjax: Invalid URL');
-    },
+    };
+    Request.prototype={
+        convertDataFn: function(data) {
+            var parsed=[];
+            this.parseData(data,'',parsed);
+            return parsed.join('&');
+        },
+        parseData: function(data,key,uriParts) {
+            if(data instanceof Array) {
+                for(var i=0, j=data.length; i<j; i++) {
+                    if(key) {
+                        var _key=(typeof data[i]=='object') ? key +'['+i+']' : key+'[]';
+                    }else {
+                        var _key=key + i;
+                    }
+                    this.parseData(data[i],_key,uriParts);
+                }
+            }else if(data instanceof Object) {
+                for(var k in data) {
+                    var _key=key ? key +'['+k+']' : k;
+                    this.parseData(data[k],_key,uriParts);
+                }
+            }else {
+                uriParts.push(encodeURIComponent(key)+'='+data);
+            }
+        }
+    };
 
     // The queue data structure
-    Queue=function() {
+    var Queue=function() {
         this.requests={};
     };
     Queue.prototype={
