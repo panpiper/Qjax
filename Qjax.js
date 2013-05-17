@@ -187,6 +187,7 @@ var Qjax=(function() {
         this.async          =opts.async || true;
         this.dataType       =(opts.dataType || '').toLowerCase();
         this.data           =opts.data;
+        this.contentType    =opts.contentType;
         this.priority       =opts.priority || 10;
         this.headers        =opts.headers || {};
         this.username       =opts.username || null,
@@ -209,11 +210,15 @@ var Qjax=(function() {
                 this.headers['Accept']=accepts[this.dataType];
             }
         }
-        if(!this.headers.hasOwnProperty('Content-Type')) {
-            if(this.data instanceof Object) {
-                this.headers['Content-Type']='application/json';
-            }else {
-                this.headers['Content-Type']='application/x-www-form-urlencoded; charset=UTF-8';
+        if(this.contentType) {
+            this.headers['Content-Type']=this.contentType;
+        }else {
+            if(this.data && !this.headers.hasOwnProperty('Content-Type')) {
+                if(this.data instanceof Object) {
+                    this.headers['Content-Type']='application/json';
+                }else {
+                    this.headers['Content-Type']='application/x-www-form-urlencoded; charset=UTF-8';
+                }
             }
         }
         if(!this.headers.hasOwnProperty('X-Requested-With')) {
@@ -470,12 +475,12 @@ var Qjax=(function() {
         // Dispatches a stand-alone request or enqueues it in the backlog if the maximum
         // number of asynchronous requests has been met
         send: function(url,rOptions) {
-			if(typeof url=='string') {
-				rOptions=rOptions || {};
-				rOptions.url=url;
-			}else {
-				rOptions=url;
-			}
+            if(typeof url=='string') {
+                rOptions=rOptions || {};
+                rOptions.url=url;
+            }else {
+                rOptions=url;
+            }
             backlog.enqueue(rOptions);
         },
 
