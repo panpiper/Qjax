@@ -1,11 +1,11 @@
 #Qjax
-A JavaScript tool that manages multiple queues of AJAX requests
+A JavaScript tool that manages multiple queues of AJAX requests.
 
 #####Dependencies: none
 
 ##Usage
 ######Stand-alone requests
-Dispatch requests immediately, bypassing any queuing mechanism.
+Dispatch requests immediately, bypassing any queuing mechanism with `send`.
  ```javascript
 Qjax.send('url'); //translates to a GET request
 Qjax.send('url',{method:'POST'});
@@ -20,7 +20,7 @@ Qjax.send({
 ```
 ######Enqueuing requests
 Each request will be dispatched in a First-In-First-Out sequence. In other words, requests will be
-served consecutively, each waiting for the previous request to complete before itself being dispatched.
+served consecutively, each waiting for the previous request to complete.
  ```javascript
 var thread=Qjax.createThread('myNewThread');
 thread.enqueue({
