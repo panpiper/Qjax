@@ -333,6 +333,9 @@ var Qjax=(function() {
             },
             lastServed: function() {
                 return thread.lastServed;
+            },
+            settings: function(opts) {
+                thread.settings(opts);
             }
         }
     },
@@ -364,6 +367,14 @@ var Qjax=(function() {
     // Thread methods
     Thread.prototype={
 
+        //Method for changing the thread settings
+        settings: function(opts) {
+            for(var o in opts) {
+                if(this.settings.hasOwnProperty(o)) {
+                    this.settings[o]=opts[o];
+                }
+            }
+        },
         // Returns the next request in line to be dispatched
         getRequestForTransport: function() {
             this.current=this.queue.shift();
