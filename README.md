@@ -41,6 +41,15 @@ Qjax.thread('myNewThread').enqueue({
     }
 });
 ```
+######Thread Options
+| Option       | Type    | Description
+| ------------ |:-------:|:----------------------------------------------------------------------------------------- |
+| limit        | Integer | The maximum number of requests to enqueue.                                                |
+| delay        | Integer | The delay in milliseconds before dispatching each request. Overridden per request option. | 
+| timeout      | Integer | The maximum wait time in milliseconds for each request. Overridden per request option.    | 
+| maxAttempts  | Integer | The maximum number of failed attempts before dropping the request from the queue.         |
+
+
 ######Request Options
 | Option       | Type          | Description
 | ------------ |:-------------:|:--------------------------------------------------------------------------------- |
