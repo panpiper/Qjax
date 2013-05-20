@@ -340,7 +340,7 @@ var Qjax=(function() {
     // The Thread class
     Thread=function(id,opts) {
         opts=opts || {};
-        this.id=opts.id;
+        this.id=id;
         this.queue=new Queue();
         this.settings={
             limit:          opts.limit || settings.queueLimit,
