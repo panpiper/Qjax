@@ -41,6 +41,15 @@ Qjax.thread('myNewThread').enqueue({
     }
 });
 ```
+######Global Options
+| Option       | Type    | Description
+| ------------ |:-------:|:-------------------------------------------------------------------------------------------
+| queueLimit   | Integer | The the maximum number of requests per queue. Can be set per thread
+| delay        | Integer | The delay in milliseconds before dispatching each request. Can be set per thread.
+| timeout      | Integer | The maximum wait time in milliseconds for each request. Can be set per thread.
+| maxAttempts  | Integer | The maximum number of failed attempts before dropping from the queue. Can be set per thread.
+| maxAsync     | Integer | The maximum number of asynchronous requests at an given time.
+
 ######Thread Options
 | Option       | Type    | Description
 | ------------ |:-------:|:----------------------------------------------------------------------------------------- |
@@ -48,7 +57,6 @@ Qjax.thread('myNewThread').enqueue({
 | delay        | Integer | The delay in milliseconds before dispatching each request. Overridden per request option. | 
 | timeout      | Integer | The maximum wait time in milliseconds for each request. Overridden per request option.    | 
 | maxAttempts  | Integer | The maximum number of failed attempts before dropping the request from the queue.         |
-
 
 ######Request Options
 | Option       | Type          | Description
