@@ -508,8 +508,14 @@ var Qjax=(function() {
         },
 
         // Enqueue a request to a user defined thread or the backlog thread
-        enqueue: function(threadID,requestOptions) {
-            threadsCache[threadID].enqueue(requestOptions);
+        enqueue: function(threadID,requestOptions,threadOpts) {
+            var thread=threadsCache[threadID];
+            if(thread instanceof Thread) {
+                threadsCache[threadID].enqueue(requestOptions);
+            }else {
+                Qjax.createThread(threadID,threadOpts);
+                threadsCache[threadID].enqueue(requestOptions);
+            }
         },
 
         // Dispatches a stand-alone request or enqueues it in the backlog if the maximum
