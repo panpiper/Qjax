@@ -488,6 +488,11 @@ var Qjax=(function() {
             }
         },
 
+		// Returns the number of threads
+		getThreadCount: function() {
+			return threads.length;
+		},
+
         // Returns true if the maximum number of asynchronous requests has been met 
         asyncLimitReached: function() {
             return asyncLimitReached();
