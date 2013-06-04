@@ -75,13 +75,13 @@ var Qjax=(function() {
                                     break;
                             }
                             if(request.callback.success instanceof Function) {
-                                request.callback.success.apply(this);
+                                request.callback.success.apply(this,[this.responseData,PublicThread(thread),request]);
                             }
                             break;
                         case 'clientError':
                         case 'serverError':
                             if(request.callback.error instanceof Function) {
-                                request.callback.error.apply(this);
+                                request.callback.error.apply(this,[this.status,PublicThread(thread),request]);
                             }
                             break;
                     }
