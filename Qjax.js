@@ -289,7 +289,7 @@ var Qjax=(function() {
         // Returns a reference to the next request in line
         top: function() {
             for(var n in this.requests) {
-                return this.requests[n];
+                return this.requests[n][0];
             }
         },
         // Clear the queue
